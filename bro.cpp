@@ -1,6 +1,29 @@
 #include<iostream>
+#include<map>
 using namespace std;
 // Amit [The Bro Programmer]
+class Validator
+{
+private:
+validator(){}
+public:
+static bool isValidMIMEType(string &mimeType)
+{
+// do nothing right now
+return true;
+}
+static bool isValidPath(string &path)
+{
+// do nothing right now
+return true;
+}
+static isValidURLFormate(string &url)
+{
+// do nothing right now
+return true;
+}
+};
+
 class Error
 {
 public: 
@@ -19,8 +42,13 @@ class Request
 class Response
 {
 public:
+string contentType;
 void setContentType(string contentType)
 {
+if(validator::isValidMIMEType(contentType))
+{
+this->contentType=contentType;
+}
 // do nothing right now
 }
 Response & operator<<(string content)
@@ -32,13 +60,32 @@ Response & operator<<(string content)
 
 class Bro
 {
+private:
+string staticResourcesFolder;
+map<string,void (*)(Request &,Response &)> urlMappings;
 public:
+Bro()
+{}
+~Bro()
+{}
 void setStaticResourcesFolder(string staticResourcesFolder)
 {
+if(validator::isValidPath(staticResourcesFolder))
+{
+this->staticResourcesFolder=staticResourcesFolder;
+}
+else
+{
+// not yet decided
+}
 // do nothing 
 }
-void get(string urlPattern,void(*callBack)(Request &,Response &))
+void get(string url,void(*callBack)(Request &,Response &))
 {
+if(validator::isValidURLFormate(url))
+{
+urlMappings.insert (pair<string, void(*)(Request &,Response &)>(url,callBack));
+}
 // do nothing
 }
 void listen(int portNumber,void(*callBack)(Error &))
