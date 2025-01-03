@@ -1,5 +1,6 @@
 #include<iostream>
 #include<map>
+#include<forward_list>
 using namespace std;
 // Amit [The Bro Programmer]
 class Validator
@@ -41,7 +42,21 @@ class Request
 };
 class Response
 {
+private:
+string contentType;
+forward_list<string> content;
+forward_list<string>::iterator contentIterator;
+unsingned contentLength;
 public:
+Response()
+{
+this->contentLength=0;
+this->contentIterator=this->content.before_begin();
+}
+~Response()
+{
+// Not yet implement
+}
 string contentType;
 void setContentType(string contentType)
 {
