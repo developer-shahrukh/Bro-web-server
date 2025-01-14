@@ -1,12 +1,15 @@
 #include<iostream>
 #include<map>
 #include<forward_list>
+#include<string.h>
+#include<windows.h>
+#include<unistd.h>
 using namespace std;
 // Amit [The Bro Programmer]
 class Validator
 {
 private:
-validator(){}
+Validator(){}
 public:
 static bool isValidMIMEType(string &mimeType)
 {
@@ -88,7 +91,7 @@ Bro()
 {}
 ~Bro()
 {}
-void setStaticResourcesFolder(string staticResourcesFolder)
+void setStaticResourcesFolder(std::string staticResourcesFolder)
 {
 if(Validator::isValidPath(staticResourcesFolder))
 {
@@ -100,7 +103,7 @@ else
 }
 // do nothing 
 }
-void get(string url,void(*callBack)(Request &,Response &))
+void get(std::string url,void(*callBack)(Request &,Response &))
 {
 if(Validator::isValidURLFormate(url))
 {
@@ -110,11 +113,18 @@ urlMappings.insert (pair<string, void(*)(Request &,Response &)>(url,callBack));
 }
 void listen(int portNumber,void(*callBack)(Error &))
 {
+WSADATA wsaData;
+WORD ver;
+ver=MAKEWORD(1,1);
+WSAStartup(ver,&wsaData);
 int serverSocketDescriptor;
-
-serverSocketDescriptor=socket(AF_INET,SOCKET_STREAM,IPPROTO_TCP);
+char requestBuffer[4096];
+int requestLength;
+int x;
+serverSocketDescriptor=socket(AF_INET,SOCK_STREAM,IPPROTO_TCP);
 if(serverSocketDescriptor<0)
 {
+WSACleanup();
 Error error("Unable to create Socket");
 callBack(error);
 return;
@@ -123,13 +133,55 @@ struct sockaddr_in serverSocketInformation;
 serverSocketInformation.sin_family=AF_INET;
 serverSocketInformation.sin_port=htons(portNumber);
 serverSocketInformation.sin_addr.s_addr=htonl(INADDR_ANY);
-int successCode=bind(serverSocketDesciptor,(struct sockaddr *)&serverSocketInformation,sizeof()serverSocketInformation);
+int successCode=bind(serverSocketDescriptor,(struct sockaddr *)&serverSocketInformation,sizeof(serverSocketInformation));
 if(successCode<0)
 {
 close(serverSocketDescriptor);
-Error error("Unable to bind socket");
-
+WSACleanup();
+char a[101];
+sprintf(a,"Unable to bind socket to port : %d",portNumber);
+Error error(a);
+callBack(error);
+return;
 }
+successCode=::listen(serverSocketDescriptor,10);
+if(successCode<0)
+{
+close(serverSocketDescriptor);
+WSACleanup();
+Error error("Unable to accept client connections");
+callBack(error);
+return;
+}
+Error error("");
+callBack(error);
+struct sockaddr_in clientSocketInformation;
+int len=sizeof(clientSocketInformation);
+int clientSocketDescriptor;
+while(1)
+{
+clientSocketDescriptor=accept(serverSocketDescriptor,(struct sockaddr *)&clientSocketInformation,&len);
+if(clientSocketDescriptor<0)
+{
+// not yet decided, will write this code later on
+}
+requestLength=recv(clientSocketDescriptor,requestBuffer,sizeof(requestBuffer),0);
+if(requestLength>0)
+{
+for(x=0;x<requestLength;x++) printf("%c",requestBuffer[x]);
+const char *response=
+"HTTP/1.1 200 ok\r\n"
+"Connection: close\r\n"
+"Content-Type: text/html\r\n"
+"Content-Length: 130\r\n\r\n"
+"<html><head><title>Shahrukh Mansuri</title></head>"
+"<body><h1>Shahrukh Mansuri<h1>"
+"<h3>We creating a web server in c++</h3></body></html>";
+send(clientSocketDescriptor,response,strlen(response),0);
+}
+//lot of code will be written here later on
+} //infinite loop ends here
+
 }
 
 };
@@ -141,7 +193,7 @@ int main()
 {
 Bro bro;
 bro.setStaticResourcesFolder("Whatever");
-bro.get("/",[](Response &response,Request &request) void{
+bro.get("/",[](Request &request,Response &response) void{
 const char *html=R""""(
 <!DOCTYPE HTML>
 <html lan='en'>
@@ -174,7 +226,7 @@ const char *html=R""""(
 <li>Ramesh</li>
 <li>Suresh</li>
 <li>Mohan</li>
-<ul>
+</ul>
 </body>
 </html>
 )"""";
@@ -182,7 +234,7 @@ response.setContentType("text/html"); // Setting MIME Type
 response<<html;
 });
 
-bro.listen(6060,[Error & error]()void{
+bro.listen(6060,[](Error & error)void{
 if(error.hasError())
 {
 cout<<error.getError();
