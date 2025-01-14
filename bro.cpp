@@ -27,14 +27,20 @@ return true;
 
 class Error
 {
+private:
+string error;
 public: 
+Error(string error)
+{
+this->error=error;
+}
 bool hasError()
 {
-return false;
+return this->error.length()>0;
 }
 string getError()
 {
-return "";
+return this->error;
 }
 };
 class Request
@@ -46,7 +52,7 @@ private:
 string contentType;
 forward_list<string> content;
 forward_list<string>::iterator contentIterator;
-unsingned contentLength;
+unsigned long contentLength;
 public:
 Response()
 {
@@ -57,10 +63,9 @@ this->contentIterator=this->content.before_begin();
 {
 // Not yet implement
 }
-string contentType;
 void setContentType(string contentType)
 {
-if(validator::isValidMIMEType(contentType))
+if(Validator::isValidMIMEType(contentType))
 {
 this->contentType=contentType;
 }
@@ -85,7 +90,7 @@ Bro()
 {}
 void setStaticResourcesFolder(string staticResourcesFolder)
 {
-if(validator::isValidPath(staticResourcesFolder))
+if(Validator::isValidPath(staticResourcesFolder))
 {
 this->staticResourcesFolder=staticResourcesFolder;
 }
@@ -97,7 +102,7 @@ else
 }
 void get(string url,void(*callBack)(Request &,Response &))
 {
-if(validator::isValidURLFormate(url))
+if(Validator::isValidURLFormate(url))
 {
 urlMappings.insert (pair<string, void(*)(Request &,Response &)>(url,callBack));
 }
@@ -105,7 +110,26 @@ urlMappings.insert (pair<string, void(*)(Request &,Response &)>(url,callBack));
 }
 void listen(int portNumber,void(*callBack)(Error &))
 {
-// do nothing right now
+int serverSocketDescriptor;
+
+serverSocketDescriptor=socket(AF_INET,SOCKET_STREAM,IPPROTO_TCP);
+if(serverSocketDescriptor<0)
+{
+Error error("Unable to create Socket");
+callBack(error);
+return;
+}
+struct sockaddr_in serverSocketInformation;
+serverSocketInformation.sin_family=AF_INET;
+serverSocketInformation.sin_port=htons(portNumber);
+serverSocketInformation.sin_addr.s_addr=htonl(INADDR_ANY);
+int successCode=bind(serverSocketDesciptor,(struct sockaddr *)&serverSocketInformation,sizeof()serverSocketInformation);
+if(successCode<0)
+{
+close(serverSocketDescriptor);
+Error error("Unable to bind socket");
+
+}
 }
 
 };
@@ -136,7 +160,7 @@ response.setContentType("text/html"); // Setting MIME Type
 response<<html;
 });
 
-bro.get("/getCustomers",[](Request &request,Response &response)void{
+bro.get("/getCustomers",[](Request &request,Response &response) void{
 const char *html=R""""(
 <!DOCTYPE HTML>
 <html lan='en'>
