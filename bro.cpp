@@ -87,11 +87,17 @@ Response & operator<<(string content)
 }
 };
 
+enum __request_method__{__GET__,__POST__,__PUT__,__DELETE__,__CONNECT__,__TRACE__,__HEAD__,__OPETIONS__};
+typedef struct __url__mapping
+{
+__request_method__ requestMethod;
+void (*mappedFunction)(Request &,Response &);
+}URLMapping;
 class Bro
 {
 private:
 string staticResourcesFolder;
-map<string,void (*)(Request &,Response &)> urlMappings;
+map<string,URLMapping> urlMappings;
 public:
 Bro()
 {}
@@ -113,7 +119,7 @@ void get(std::string url,void(*callBack)(Request &,Response &))
 {
 if(Validator::isValidURLFormate(url))
 {
-urlMappings.insert (pair<string, void(*)(Request &,Response &)>(url,callBack));
+urlMappings.insert (pair<string,URLMapping>(url,{__GET__,callBack}));
 }
 // do nothing
 }
@@ -180,65 +186,31 @@ int clientSocketDescriptor;
 while(1)
 {
 clientSocketDescriptor=accept(serverSocketDescriptor,(struct sockaddr *)&clientSocketInformation,&len);
-if(clientSocketDescriptor<0)
-{
-// not yet decided, will write this code later on
-}
-forward_list<string> requestBufferDS;
-forward_list<string>::iterator requestBufferDSIterator;
-requestBufferDSIterator=requestBufferDS.before_begin();
-int requestBufferDSSize=0;
-int requestDataCount=0;
-while(1)
-{
 requestLength=recv(clientSocketDescriptor,requestBuffer,sizeof(requestBuffer)-sizeof(char),0);
-if(requestLength==0) break;
-requestBuffer[requestLength]='\0';
-requestBufferDSIterator=requestBufferDS.insert_after(requestBufferDSIterator,string(requestBuffer));
-requestBufferDSSize++;
-requestDataCount+=requestLength;
-}
-if(requestBufferDSSize>0)
+if(requestLength==0 || requestLength==-1)
 {
-char *requestData=new char[requestDataCount+1];
-char *p;
-p=requestData;
-const char *q;
-requestBufferDSIterator=requestBufferDS.begin();
-while(requestBufferDSIterator!=requestBufferDS.end())
-{
-q=(*requestBufferDSIterator).c_str();
-while(*q)
-{
-*p=*q;
-p++;
-q++;
-}
-++requestBufferDSIterator;
-}
-*p='\0';
-requestBufferDS.clear();
-printf("------------- request data begin -------------\n");
-printf("%s\n",requestData);
-printf("------------ request data end ----------------\n");
-// the code to parse the request goes here
-delete [] requestData;
-}
-else
-{
-// something  if no data was received
-}
 close(clientSocketDescriptor);
+continue;
+}
+int i;
+char *method,*requestURI,*httpVersion;
+requestBuffer[requestLength]='\0';
+// code to parse the first line of the http request starts here
+// first line should be REQUEST_METHOD SPACE URI SPACE HTTPVersionCRLF
+method=requestBuffer;
+i=0;
+while(requestBuffer[i] && requestBuffer[i]!=' ') i++;
 
 
+
+close(clientSocketDescriptor);
 //lot of code will be written here later on
 } //infinite loop ends here
-
+#ifdef __WIN32
+WSACleanup();
+#endif
 }
-
 };
-
-
 
 // Bobby [The Web Application Developer - User of Bro Web Server]
 int main()
