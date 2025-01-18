@@ -12,6 +12,48 @@
 #endif
 using namespace std;
 // Amit [The Bro Programmer]
+class StringUtility
+{
+private:
+StringUtility();
+public:
+static void toLowerCase(char *str)
+{
+if(str==NULL) return;
+for(;*str;str++) if(*str>=65 && *str<=90) *str+=32;
+}
+};
+class HttpErrorStatusUtility
+{
+private:
+HttpErrorStatusUtility(){}
+public:
+static void sendBadRequestError(int clientSocketDescriptor)
+{
+// will complete later on
+}
+static void sendHttpVersionNotSupportedError(int clientSocketDescriptor,char *httpVersion)
+{
+// will complete later on
+}
+static void sendNotFoundError(int clientSocketDescriptor,char *requestURI)
+{
+// we will optimize this code later on
+char content[1000];
+char header[200];
+char response[1200];
+sprintf(content,"<!doctype html><html lang='en'><head><meta charset='utf-8'><title>404 Error</title></head><body>Requested Resources [%s] Not found</body>",requestURI);
+int contentLength=strlen(content);
+sprintf(header,"HTTP/1.1 404 Not Found\r\nContent-Type:text/html\nContent-Length:%d\nConnection: close\r\n\r\n",contentLength);
+strcpy(response,header);
+strcat(response,content);
+send(clientSocketDescriptor,response,strlen(response),0);
+}
+static void sendMethodNotAllowedError(int clientSocketDescriptor,char *method,char *requestURI)
+{
+// will complete later on
+}
+};
 class Validator
 {
 private:
@@ -54,6 +96,17 @@ return this->error;
 };
 class Request
 {
+private:
+char *method;
+char *requestURI;
+char *httpVersion;
+Request(char *method,char *requestURI,char *httpVersion)
+{
+this->method=method;
+this->requestURI=requestURI;
+this->httpVersion=httpVersion;
+}
+friend class Bro;
 };
 class Response
 {
@@ -78,21 +131,46 @@ if(Validator::isValidMIMEType(contentType))
 {
 this->contentType=contentType;
 }
-// do nothing right now
 }
 Response & operator<<(string content)
 {
-// right now do nothing
- return *this;
+this->contentLength+=content.length();
+this->contentIterator=this->content.insert_after(this->contentIterator,content);
+return *this;
+}
+friend class HttpResponseUtility;
+};
+ 
+class HttpResponseUtility
+{
+private:
+HttpResponseUtility(){}
+public:
+static void sendResponse(int clientSocketDescriptor,Response &response)
+{
+char header[200];
+int contentLength=response.contentLength;
+sprintf(header,"HTTP/1.1 200 Ok\r\nContent-Type:text/html\nContent-Length:%d\nConnection: close\r\n\r\n",contentLength);
+send(clientSocketDescriptor,header,strlen(header),0);
+auto contentIterator=response.content.begin();
+while(contentIterator!=response.content.end())
+{
+string str=*contentIterator;
+send(clientSocketDescriptor,str.c_str(),str.length(),0);
+++contentIterator;
+}
 }
 };
 
+
+  
 enum __request_method__{__GET__,__POST__,__PUT__,__DELETE__,__CONNECT__,__TRACE__,__HEAD__,__OPETIONS__};
 typedef struct __url__mapping
 {
 __request_method__ requestMethod;
 void (*mappedFunction)(Request &,Response &);
 }URLMapping;
+
 class Bro
 {
 private:
@@ -100,10 +178,14 @@ string staticResourcesFolder;
 map<string,URLMapping> urlMappings;
 public:
 Bro()
-{}
+{
+// Not yet decided
+}
 ~Bro()
-{}
-void setStaticResourcesFolder(std::string staticResourcesFolder)
+{
+// Not yet decided
+}
+void setStaticResourcesFolder(string staticResourcesFolder)
 {
 if(Validator::isValidPath(staticResourcesFolder))
 {
@@ -113,17 +195,15 @@ else
 {
 // not yet decided
 }
-// do nothing 
 }
-void get(std::string url,void(*callBack)(Request &,Response &))
+void get(string url,void (*callBack)(Request &,Response &))
 {
 if(Validator::isValidURLFormate(url))
 {
-urlMappings.insert (pair<string,URLMapping>(url,{__GET__,callBack}));
+urlMappings.insert(pair<string,URLMapping>(url,{__GET__,callBack}));
 }
-// do nothing
 }
-void listen(int portNumber,void(*callBack)(Error &))
+void listen(int portNumber,void (*callBack)(Error &))
 {
 #ifdef _WIN32
 WSADATA wsaData;
@@ -200,9 +280,95 @@ requestBuffer[requestLength]='\0';
 method=requestBuffer;
 i=0;
 while(requestBuffer[i] && requestBuffer[i]!=' ') i++;
+if(requestBuffer[i]=='\0')
+{
+HttpErrorStatusUtility::sendBadRequestError(clientSocketDescriptor);
+close(clientSocketDescriptor);
+continue;
+}
+requestBuffer[i]='\0';
+i++;
+if(requestBuffer[i]==' ' || requestBuffer[i]=='\0')
+{
+HttpErrorStatusUtility::sendBadRequestError(clientSocketDescriptor);
+close(clientSocketDescriptor);
+continue;
+}
+StringUtility::toLowerCase(method);
 
-
-
+if(!(strcmp(method,"get")==0 || strcmp(method,"post")==0 || strcmp(method,"put")==0 || strcmp(method,"delete")==0 || strcmp(method,"head")==0 || strcmp(method,"options")==0  || strcmp(method,"trace")==0 || strcmp(method,"connect")==0))
+{
+HttpErrorStatusUtility::sendBadRequestError(clientSocketDescriptor);
+close(clientSocketDescriptor);
+continue;
+}
+requestURI=requestBuffer+i;
+while(requestBuffer[i] && requestBuffer[i]!=' ') i++;
+if(requestBuffer[i]=='\0')
+{
+HttpErrorStatusUtility::sendBadRequestError(clientSocketDescriptor);
+close(clientSocketDescriptor);
+continue;
+}
+requestBuffer[i]=='\0';
+i++;
+if(requestBuffer[i]==' ' || requestBuffer[i]=='\0')
+{
+HttpErrorStatusUtility::sendBadRequestError(clientSocketDescriptor);
+close(clientSocketDescriptor);
+continue;
+}
+httpVersion=requestBuffer+i;
+while(requestBuffer[i] && requestBuffer[i]!='r' && requestBuffer[i]!='\n') i++;
+if(requestBuffer[i]=='\0')
+{
+HttpErrorStatusUtility::sendBadRequestError(clientSocketDescriptor);
+close(clientSocketDescriptor);
+continue;
+}
+if(requestBuffer[i]=='\r' && requestBuffer[i+1]!='\n')
+{
+HttpErrorStatusUtility::sendBadRequestError(clientSocketDescriptor);
+close(clientSocketDescriptor);
+continue;
+}
+if(requestBuffer[i]=='\r')
+{
+requestBuffer[i]='0';
+i=i+2;
+}
+else
+{
+requestBuffer[i]='\0';
+i=i+1;
+}
+StringUtility::toLowerCase(httpVersion);
+if(strcmp(httpVersion,"http/1.1")!=0)
+{
+HttpErrorStatusUtility::sendHttpVersionNotSupportedError(clientSocketDescriptor,httpVersion);
+close(clientSocketDescriptor);
+continue;
+}
+auto  urlMappingsIterator=urlMappings.find(requestURI);
+if(urlMappingsIterator==urlMappings.end())
+{
+HttpErrorStatusUtility::sendNotFoundError(clientSocketDescriptor,requestURI);
+close(clientSocketDescriptor);
+continue;
+}
+URLMapping urlMapping=urlMappingsIterator->second;
+if(urlMapping.requestMethod==__GET__ and strcmp(method,"get")!=0)
+{
+HttpErrorStatusUtility::sendMethodNotAllowedError(clientSocketDescriptor,method,requestURI);
+close(clientSocketDescriptor);
+continue;
+}
+// code to parse the header and then the payload if exists start here
+// code to parse the header and then the payload if exists ends here
+Request request(method,requestURI,httpVersion);
+Response response;
+urlMapping.mappedFunction(request,response);
+HttpResponseUtility::sendResponse(clientSocketDescriptor,response);
 close(clientSocketDescriptor);
 //lot of code will be written here later on
 } //infinite loop ends here
@@ -216,7 +382,7 @@ WSACleanup();
 int main()
 {
 Bro bro;
-bro.setStaticResourcesFolder("Whatever");
+//bro.setStaticResourcesFolder("Whatever");
 bro.get("/",[](Request &request,Response &response) void{
 const char *html=R""""(
 <!DOCTYPE HTML>
