@@ -382,8 +382,10 @@ WSACleanup();
 int main()
 {
 Bro bro;
-//bro.setStaticResourcesFolder("Whatever");
-bro.get("/",[](Request &request,Response &response) void{
+bro.setStaticResourcesFolder("Whatever");
+std::cout << "Initializing Bro HTTP Server..." << std::endl;
+bro.get("/",[](Request &request,Response &response) {
+std::cout<<"Request received for /"<<std::endl;
 const char *html=R""""(
 <!DOCTYPE HTML>
 <html lan='en'>
@@ -402,7 +404,7 @@ response.setContentType("text/html"); // Setting MIME Type
 response<<html;
 });
 
-bro.get("/getCustomers",[](Request &request,Response &response) void{
+bro.get("/getCustomers",[](Request &request,Response &response) {
 const char *html=R""""(
 <!DOCTYPE HTML>
 <html lan='en'>
@@ -424,14 +426,15 @@ response.setContentType("text/html"); // Setting MIME Type
 response<<html;
 });
 
-bro.listen(6060,[](Error & error)void{
+bro.listen(6060,[](Error & error) {
 if(error.hasError())
 {
-cout<<error.getError();
+cout<<"Something error : "<<error.getError();
 return;
 }
 cout<<"Bro HTTP Server is ready to accept request on port 6060"<<endl;
 });
+std::cout << "Main function completed. Server should now be running." << std::endl;
 return 0;
 }
 
