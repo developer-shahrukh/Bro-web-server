@@ -310,7 +310,7 @@ HttpErrorStatusUtility::sendBadRequestError(clientSocketDescriptor);
 close(clientSocketDescriptor);
 continue;
 }
-requestBuffer[i]=='\0';
+requestBuffer[i]='\0';
 i++;
 if(requestBuffer[i]==' ' || requestBuffer[i]=='\0')
 {
@@ -319,7 +319,7 @@ close(clientSocketDescriptor);
 continue;
 }
 httpVersion=requestBuffer+i;
-while(requestBuffer[i] && requestBuffer[i]!='r' && requestBuffer[i]!='\n') i++;
+while(requestBuffer[i] && requestBuffer[i]!='\r' && requestBuffer[i]!='\n') i++;
 if(requestBuffer[i]=='\0')
 {
 HttpErrorStatusUtility::sendBadRequestError(clientSocketDescriptor);
@@ -334,7 +334,7 @@ continue;
 }
 if(requestBuffer[i]=='\r')
 {
-requestBuffer[i]='0';
+requestBuffer[i]='\0';
 i=i+2;
 }
 else
@@ -383,9 +383,7 @@ int main()
 {
 Bro bro;
 bro.setStaticResourcesFolder("Whatever");
-std::cout << "Initializing Bro HTTP Server..." << std::endl;
 bro.get("/",[](Request &request,Response &response) {
-std::cout<<"Request received for /"<<std::endl;
 const char *html=R""""(
 <!DOCTYPE HTML>
 <html lan='en'>
@@ -434,7 +432,6 @@ return;
 }
 cout<<"Bro HTTP Server is ready to accept request on port 6060"<<endl;
 });
-std::cout << "Main function completed. Server should now be running." << std::endl;
 return 0;
 }
 
