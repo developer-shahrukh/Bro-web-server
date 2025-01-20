@@ -1,0 +1,73 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset='utf-8'>
+<title>AJAX Without JQuery</title>
+<style>
+table {
+border: 1px solid black;
+border-collapse: collapse;
+}
+table th,td {
+border: 1px solid black;
+}
+</style>
+<script>
+// In this example, we are not using JQUERY
+window.addEventListener('load',()=>{
+var xhr=new HMLHttpRequest();
+xhr.onreadystatechange=function(){
+console.log(xhr.readystate);
+if(xhr.readystate==4 && xhr.status==200)
+{
+var employees=JSON.parse(xhr.responseText);
+alert(employees);
+var tbl=document.getElementById("employeesViewTable");
+var tbd=tbl.getElementByTagName("tbody")[0];
+var i,row,cell;
+i=0;
+while(i<employees.length)
+{
+row=document.createElement("tr");
+cell=document.createElement("td");
+cell.append(document.createTextNode(i+1));
+row.append(cell);
+cell=document.createElement("td");
+cell.append(document.createTextNode(employees[i].id));
+row.append(cell);
+
+cell=document.createElement("td");
+cell.append(document.createTextNode(employees[i].firstName));
+row.append(cell);
+
+cell=document.createElement("td");
+cell.append(document.createTextNode(employees[i].lastName));
+row.append(cell);
+tbd.append(row);
+i++;
+}
+}
+}
+xhr.open('GET','getEmployees');
+xhr.send();
+});
+</script>
+</head>
+<body>
+<h1>Example 39 -AJAX 1 (Without JQUERY)</h1>
+<h2>Employees</h2>
+<table id='employeesViewTable'>
+<thead>
+<tr>
+<th>S.No.</th>
+<th>Id.</th>
+<th>First name</th>
+<th>Last name</th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+<br><a href='/'>Home</a>
+</body>
+</html>

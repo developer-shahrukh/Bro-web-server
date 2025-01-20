@@ -1,0 +1,69 @@
+<!DOCTYPE HTML>
+<html lang='en'>
+<head>
+<meta charset='utf-8'>
+<title>JQuery Examples</title>
+<link rel='stylesheet' href='jquery-ui-1.13.2/jquery-ui.min.css'>
+<script src='jquery/jquery-3.7.1.min.js'></script>
+<script src='jquery-ui-1.13.2/jquery-ui.js'></script>
+<script src="jquery-validation-1.19.5/jquery.validate.min.js"></script>
+<script>
+$(()=>{
+    $("#employeeAddForm").validate({
+        rules: {
+            name: {
+                required: true,
+                rangelength: [3,25]
+            },
+            age: {
+                required: true,
+                range: [18,60]
+            },
+            emailId: {
+                required: true,
+                email: true
+            },
+            url: {
+                required: true,
+                url: true
+            },
+            salary: {
+                required: true,
+                number: true
+            },
+            aadharCardNumber: {
+                required: true,
+                digits: true
+            },
+            aadharCardNumberRetyped: {
+                required: true,
+                digits: true,
+                equalTo: aadharCardNumber
+            },
+            dateOfJoining: {
+                required: true,
+                dateISO: true
+            }
+        }
+    });
+});
+</script>
+</head>
+<body>
+<h1>Example 88</h1>
+<form id='employeeAddForm' action='addEmployee'>
+    
+    Name <input type='text' id='name' name='name'><br>
+    Age <input type="text" id="age" name="age"><br>
+    Email Id <input type="text" id="emailId" name="emailId"><br>
+    Enter website url <input type="text" id="url" name="url"><br>
+    Enter basic salary <input type="text" id="salary" name="salary"><br>
+    Enter aadhar card number <input type="text" id="aadharCardNumber" name="aadharCardNumber"><br>
+    Retype aadhar card number <input type="text" id="aadharCardNumberRetyped" name="aadharCardNumberRetyped"><br>
+    Enter date of joining <input type="text" id="dateOfJoining" name="dateOfJoining"><br>
+    <button type="submit">Process</button>
+</form>
+<br>
+<br><a href='/'>Home</a>
+</body>
+</html>

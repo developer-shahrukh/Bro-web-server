@@ -1,0 +1,44 @@
+<!DOCTYPE HTML>
+<html lang='en'>
+<head>
+<meta charset='utf-8'>
+<title>JQuery Examples</title>
+<script src='jquery/jquery-3.7.1.min.js'></script>
+<style>
+.xyz
+{
+color:red;
+}
+.pqr
+{
+color:orange;
+font-size:32pt;
+}
+</style>
+<script>
+const oneClicked=()=>{
+//alert($(".xyz").css("color"));
+$(".xyz").css("color","blue");
+//alert($(".xyz").css("color"));
+}
+function twoClicked()
+{
+alert($(".pqr").css("fontSize")); // use camel case instead of - prop value separated by - (dateOfBirth)
+var ff=$(".pqr").css("fontSize");
+alert(ff);
+ff=parseFloat(ff);
+alert(ff);
+var k=`${ff*2}px`;
+alert(k);
+$(".pqr").css("fontSize",k);
+}
+</script>
+</head>
+<body>
+<h1 class='xyz'>Example 31</h1>
+<div class='pqr'>Ujjain is the cool city</div>
+<button type='button' onclick='oneClicked()'>Button 1</button><br><br>
+<button type='button' onclick='twoClicked()'>Button 2</button>
+<br><a href='/'>Home</a>
+</body>
+</html>

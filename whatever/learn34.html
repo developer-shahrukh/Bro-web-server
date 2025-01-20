@@ -1,0 +1,104 @@
+<!DOCTYPE HTML>
+<html lang='en'>
+<head>
+<meta charset='utf-8'>
+<title>JQuery Examples</title>
+<script src='jquery/jquery-3.7.1.min.js'></script>
+<style>
+.xyz
+{
+height:40px;
+overflow:hidden;
+}
+</style>
+<script>
+var ih=0;
+var ah=0;
+$(()=>{
+ih=$("#ddd").css("height");
+$("#ddd").css("height","auto");
+ah=$("#ddd").css("height");
+$("#ddd").css("height",ih);
+
+$(window).on('resize',()=>{
+var isOfInitialHeight;
+if($("#abcd").html()=="show more")
+{
+isOfInitialHeight=true;
+}
+else
+{
+isOfInitialHeight=false;
+}
+$("#ddd").css("height","auto");
+ah=$("#ddd").css("height");
+if(isOfInitialHeight)
+{
+$("#ddd").css("height",ih);
+}
+});
+
+$("#abcd").click((ev)=>{
+ev.preventDefault();
+
+if($("#ddd").css("height")==ih)
+{
+$("#ddd").animate({"height": ah},500,"swing",()=>{
+$(ev.target).html("show less");
+});
+}
+else
+{
+$("#ddd").animate({"height": ih},500,"swing",()=>{
+$(ev.target).html("show more");
+});
+}
+});
+});
+</script>
+</head>
+<body>
+<h1>Example 34</h1>
+<div class='xyz' id='ddd'>
+Ujjain is the cool city<br>
+Ujjain to indore 55km away<br>
+Indore is a clean city<br>
+Ujjain is the cool city<br>
+Ujjain to indore 55km away<br>
+Indore is a clean city<br>
+Ujjain is the cool city<br>
+Ujjain to indore 55km away<br>
+Indore is a clean city<br>
+Ujjain is the cool city<br>
+Ujjain to indore 55km away<br>
+Indore is a clean city<br>
+Ujjain is the cool city<br>
+Ujjain to indore 55km away<br>
+Indore is a clean city<br>
+Ujjain is the cool city<br>
+Ujjain to indore 55km away<br>
+Indore is a clean city<br>
+Bhopal is the capital of Madhya Pradesh<br>
+</div>
+<a id='abcd' href=''>show more</a><br>
+<br>
+<br><br>
+<div class='xyz'>
+Cool fool<br>
+Ugly,bad ,good<br>
+Cool fool<br>
+Cool fool<br>
+Ugly,bad ,good<br>
+Cool fool<br>
+Ugly,bad ,good<br>
+Cool fool<br>
+Ugly,bad ,good<br>
+Cool fool<br>
+Ugly,bad ,good<br>
+Cool fool<br>
+Ugly,bad ,good<br>
+</div>
+
+<br><a href='/'>Home</a>
+</body>
+</html>

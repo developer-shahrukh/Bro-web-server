@@ -1,3 +1,4 @@
+#include<sys/stat.h>
 #include<iostream>
 #include<map>
 #include<forward_list>
@@ -12,6 +13,30 @@
 #endif
 using namespace std;
 // Amit [The Bro Programmer]
+class FileSystemUtility
+{
+private:
+FileSystemUtility(){}
+public:
+static bool fileExists(const char * path)
+{
+struct stat s;
+int x;
+x=stat(path,&s);
+if(x!=0) return false;
+if(s.st_mode & S_IFDIR) return false;
+return true;
+}
+static bool directoryExists(const char *path)
+{
+struct stat s;
+int x;
+x=stat(path,&s);
+if(x!=0) return false;
+if(s.st_mode & S_IFDIR) return true;
+return false;
+}
+};
 class StringUtility
 {
 private:
@@ -66,8 +91,7 @@ return true;
 }
 static bool isValidPath(string &path)
 {
-// do nothing right now
-return true;
+return FileSystemUtility::directoryExists(path.c_str());
 }
 static isValidURLFormate(string &url)
 {
@@ -193,8 +217,47 @@ this->staticResourcesFolder=staticResourcesFolder;
 }
 else
 {
-// not yet decided
+string exception=string("Invalid static resource folder path :")+staticResourcesFolder;
+throw exception;
 }
+}
+bool serveStaticResource(int clientSocketDescriptor,const char *requestURI)
+{
+if(this->staticResourcesFolder.length()==0) return false;   
+if(!FileSystemUtility::directoryExists(this->staticResourcesFolder.c_str())) return false;
+string resourcePath=this->staticResourcesFolder+string(requestURI);
+cout<<"Static resource path is "<<resourcePath<<endl;
+if(!FileSystemUtility::fileExists(resourcePath.c_str())) return false;
+FILE *file=fopen(resourcePath.c_str(),"rb");
+if(file==NULL) return false;
+long fileSize;
+fseek(file,0,SEEK_END);
+fileSize=ftell(file);
+if(fileSize==0)
+{
+fclose(file);
+return false; 
+}
+rewind(file); // to move the internal file pointer to the start of the file
+
+char header[200];
+sprintf(header,"HTTP/1.1 200 Ok\r\nContent-Type: text/html\r\nContent-Length: %ld\r\nConnection: close\r\n\r\n",fileSize);
+send(clientSocketDescriptor,header,strlen(header),0);
+int bytesLeftToRead;
+int bytesToRead;
+char buffer[4096];
+bytesToRead=4096;
+bytesLeftToRead=fileSize;
+while(bytesLeftToRead>0)
+{
+if(bytesLeftToRead<bytesToRead) bytesToRead=bytesLeftToRead;
+fread(buffer,bytesToRead,1,file);
+if(feof(file)) break; // this won't happen in our case
+send(clientSocketDescriptor,buffer,bytesToRead,0);
+bytesLeftToRead=bytesLeftToRead-bytesToRead;
+}
+fclose(file);
+return true;
 }
 void get(string url,void (*callBack)(Request &,Response &))
 {
@@ -349,10 +412,14 @@ HttpErrorStatusUtility::sendHttpVersionNotSupportedError(clientSocketDescriptor,
 close(clientSocketDescriptor);
 continue;
 }
+cout<<"Request arrived, uri is : "<<requestURI<<endl;
 auto  urlMappingsIterator=urlMappings.find(requestURI);
 if(urlMappingsIterator==urlMappings.end())
 {
+if(!serveStaticResource(clientSocketDescriptor,requestURI))
+{
 HttpErrorStatusUtility::sendNotFoundError(clientSocketDescriptor,requestURI);
+}
 close(clientSocketDescriptor);
 continue;
 }
@@ -381,8 +448,10 @@ WSACleanup();
 // Bobby [The Web Application Developer - User of Bro Web Server]
 int main()
 {
+try
+{
 Bro bro;
-bro.setStaticResourcesFolder("Whatever");
+bro.setStaticResourcesFolder("whatever");
 bro.get("/",[](Request &request,Response &response) {
 const char *html=R""""(
 <!DOCTYPE HTML>
@@ -417,6 +486,8 @@ const char *html=R""""(
 <li>Suresh</li>
 <li>Mohan</li>
 </ul>
+<br>
+<a href='/' >Home</a>
 </body>
 </html>
 )"""";
@@ -432,6 +503,10 @@ return;
 }
 cout<<"Bro HTTP Server is ready to accept request on port 6060"<<endl;
 });
+}catch(string exception)
+{
+cout<<exception<<endl;
+}
 return 0;
 }
 

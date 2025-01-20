@@ -1,0 +1,89 @@
+<!DOCTYPE HTML>
+<html lang='en'>
+<head>
+<meta charset='utf-8'>
+<title>JQuery Examples</title>
+<script src='jquery/jquery-3.7.1.min.js'></script>
+<style>
+.homeLink
+{
+position:absolute;
+top:5px;
+right:5px;
+}
+.checkers
+{
+position:absolute;
+padding:5px;
+border:1px solid gray;
+left:5px;
+right:5px;
+bottom:5px;
+}
+.city
+{
+position:relative;
+top:80px;
+border:1px solid red;
+width:200px;
+padding:5px;
+margin-top:10px;
+left:25px;
+}
+</style>
+<script>
+$(()=>{
+var originalLeft=$(".city").css("left");
+$("input:checkbox").click((ev)=>{
+//alert('great');
+//alert($(ev.target).val());
+var checkboxRef=$(ev.target);
+var divisionId=checkboxRef.val();
+var isChecked=checkboxRef.is(":checked");
+//alert(divisionId);
+//alert(isChecked);
+var divisionRef=$("#"+divisionId);
+//alert(divisionRef.html());
+if(isChecked)
+{
+var bodyWidth=parseFloat($("body").css("width"));
+var divisionWidth=parseFloat(divisionRef.css("width"));
+var leftMargin=(bodyWidth-divisionWidth-30)+"px";
+//alert(bodyWidth+","+divisionWidth+","+leftMargin);
+divisionRef.animate({left: leftMargin},"slow");
+}
+else
+{
+divisionRef.animate({left: originalLeft},"slow");
+}
+
+});
+
+});
+
+</script>
+</head>
+<body>
+<h1>Example 37</h1>
+<h3 style='left:30px;position:absolute;'>Tour options</h3>
+<h3 style='right:30px;position:absolute'>Select Tour option</h3>
+<div class='city' id='d1'>
+<b>Ujjain</b><br>
+<u>The city of cool</u>
+</div>
+<div class='city' id='d2'>
+<b>Bhopal</b><br>
+<u>The city of lack</u>
+</div>
+<div class='city' id='d3'>
+<b>Jaipur</b><br>
+<u>Pink city</u>
+</div>
+<div class='checkers'>
+Ujjain <input type='checkbox' value='d1'>&nbsp;&nbsp;&nbsp; 
+Bhopal <input type='checkbox' value='d2'>&nbsp;&nbsp;&nbsp;
+Jaipur <input type='checkbox' value='d3'>&nbsp;&nbsp;&nbsp;
+</div>
+<br><a class='homeLink' href='/'>Home</a>
+</body>
+</html>

@@ -1,0 +1,79 @@
+<!DOCTYPE HTML>
+<html lang='en'>
+<head>
+<meta charset='utf-8'>
+<title>JQuery Examples</title>
+<script src='jquery/jquery-3.7.1.min.js'></script>
+<style>
+.xyz
+{
+height:40px;
+overflow:hidden;
+}
+</style>
+<script>
+function oneClicked()
+{
+//$("p").hide();
+//$("p").hide(1000);
+//$("p").hide("slow");
+//$("p").hide("fast");
+//$("p").fadeOut("slow");
+//$("p").fadeOut("fast");
+//$("p").fadeOut(5000);
+//$("p").slideUp("slow");
+$("p").slideUp("fast");
+}
+
+const twoClicked=()=>{
+//$("p").show();
+//$("p").show(1000);
+//$("p").show("slow");
+//$("p").show("fast");
+//$("p").fadeIn("slow");
+//$("p").fadeIn("fast");
+//$("p").fadeIn(5000);
+//$("p").slideDown("slow");
+$("p").slideDown("fast");
+}
+function threeClicked()
+{
+//$("p").slideToggle("slow");
+//$("p").slideToggle("flow");
+$("p").slideToggle(200);
+}
+
+
+</script>
+</head>
+<body>
+<h1>Example 35</h1>
+<p>
+1. Interview Process
+Now that I'm sure you're interested in working at Flipkart, let me guide you through the whole process for your SDE interview (internship and full-time roles). SDE stands for Software Development Engineer. The creation of features based on product requirements is done by the SDE1-4 engineers at Flipkart. Here, you must know the best practices of code, design principles and patterns. Any code you write must also be maintainable and extensible. You must also develop a deep understanding of non-functional requirements, such as reliability and availability, scaling, etc over time and make tech stack decisions accordingly.
+
+Oh geez, feeling intimidated? Don't worry, read on. We'll break down the interview process better for you. Give this article a thorough read and you'll be working your dream job.
+2. Interview Rounds
+1. Interview Process for an SDE intern position
+
+Round 1: Online Coding Round 
+The first round for this position is generally an online coding round with 2 coding questions to be solved within a time limit. Both the questions are based on basic DSA (data structures and algorithms).
+In the interview process for the SDE intern role, there will be 3 rounds (after the on-campus rounds) of which the first two will be the technical rounds focused on Problem Solving and Data Structures.
+Round 2 & 3: Online Coding Round PS/ DS (Problem-Solving / Data Structures)
+Checking your comfort level with data structures, algorithms etc will be the main focus of the interviewer. The Data Structures and Algorithms would include arrays, graphs, trees, tries, DP, recursion, linked lists, stacks and queues, maps, heaps and so on. They will also pay attention to how you approach the problem. So what is the flow of the interview?
+First, the question will be shared with you. Once that is done, it is expected from you that you first understand the problem shared. Do not hesitate to ask questions about the problem to the interviewer, asking questions is important!
+After creating a basic understanding of the question you've got, you would now have to come up with an approach to solve the problem. You'll have to decide the algorithm you want to use or the data structure that could be useful in solving the given problem. You could come up with a basic brute-force solution and optimize it later.
+Throughout the interview, you can ask the interviewer for some hints, or they may give you some on their own to guide you into solving the problem a particular way. Remember that you're not alone in this! So stay alert and proactive when asking for doubts or for hints.
+Now, can you earn some extra brownie points? Yes of course! Talk about the time and space complexities of your code, and also how it handles the corner cases. If you're also great at picking up the hints dropped to you, and getting the code correct after that, you get more points.
+You could also be asked for pseudo-code (not complete code, generally an algorithm written in English following a preferred language's format).
+Round 4: Hiring Manager Round
+The Final Round of the process would be a Hiring Manager round, which is generally taken by an Engineering Manager of the team for which you are giving an interview.
+This round is focused more on checking how well you would fit into the Flipkart world, with the panel evaluating you on your cultural fit as well as other soft skills such as communication, attitude, etc.
+In order to ace this round, it is advisable to have gone in detail through your resume (esp the projects) and be true to who you are!
+</p>
+<button type='button' onclick='oneClicked()'>Button 1</button><br>
+<button type='button' onclick='twoClicked()'>Button 2</button><br>
+<button type='button' onclick='threeClicked()'>Button 3</button><br>
+<br><a href='/'>Home</a>
+</body>
+</html>

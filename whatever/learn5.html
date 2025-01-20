@@ -1,0 +1,80 @@
+<!DOCTYPE HTML>
+<html lang='en'>
+<head>
+<meta charset='utf-8'>
+<title>JQuery Examples</title>
+<script src='jquery/jquery-3.7.1.min.js'></script>
+<style>
+table
+{
+border:1px solid black;
+border-collapse:collapse;
+}
+table td,th{
+border:1px solid black;
+padding:10px;
+}
+.xyz
+{
+color:white;
+background-color:orange;
+}
+</style>
+<script>
+$(()=>{
+$('tbody > tr:even').addClass('xyz');
+});
+function doSomething()
+{
+alert($("tbody > tr:nth-child(2)").html());
+alert($("tr:eq(2)").html());
+alert($("tr:contains(Grow)").html());
+}
+</script>
+</head>
+<body>
+<h1>Example 5</h1>
+<p>Thinking machies - Placements 2021</p>
+<table>
+<thead>
+<tr>
+<td>Name</td>
+<td>Type</td>
+<td>Company</td>
+<td>Package</td>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Sudhir</td>
+<td>Full Time</td>
+<td>Grow</td>
+<td>6 LPA</td>
+</tr>
+
+<tr>
+<td>Akshat Jain</td>
+<td>Full Time</td>
+<td>Adobe</td>
+<td>41 LPA</td>
+</tr>
+
+<tr>
+<td>Aditi Garg</td>
+<td>Full Time</td>
+<td>Amazon</td>
+<td>47 LPA</td>
+</tr>
+
+<tr>
+<td>Anis Ajmeri</td>
+<td>Full Time</td>
+<td>Morgan stainly</td>
+<td>12 LPA</td>
+</tr>
+</tbody>
+</table>
+<button type='button' onclick='doSomething()'>Click me</button><br>
+<br><a href='/'>Home</a>
+</body>
+</html>

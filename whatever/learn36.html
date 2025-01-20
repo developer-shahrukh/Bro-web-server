@@ -1,0 +1,52 @@
+<!DOCTYPE HTML>
+<html lang='en'>
+<head>
+<meta charset='utf-8'>
+<title>JQuery Examples</title>
+<script src='jquery/jquery-3.7.1.min.js'></script>
+<script>
+$(()=>{
+$("ellipses").show();
+$("#moreMatter").hide();
+$("#divToggleButton").click(function(){
+var txt=$(this).html();
+if(txt==="Show More")
+{
+$("#ellipses").hide();
+$("#moreMatter").show();
+$(this).html("Show Less");
+}
+else
+{
+$("#moreMatter").hide();
+$("#ellipses").show();
+$(this).html("Show More");
+
+}
+
+});
+
+
+});
+
+</script>
+</head>
+<body>
+<h1>Example 36</h1>
+<div id='amazon'>
+There is no doubt that this one is a must-have skill to apply for the job of SDE or software engineer role in Amazon or any other big tech company. Hiring procedures in these companies are kind of similar but we are going to share some specific detail, tips, preparation strategy, and evaluation process of Amazon to crack the interview. Keep in mind that the difficulty level of these rounds depends on the level of SDE position you are applying and you can prefer any programming language you are comfortable with.<span id='ecllipses'>....</span>
+<span id='moreMatter'>
+Important Points to Keep in Mind:
+
+Amazon gives higher weight and has a standardized script for Leadership Principles throughout the interview. It has a much stronger focus on customer obsession. So go through their leadership principles carefully if you are applying there.
+Do some background research on the company. What’s the company doing right now or what’s the market scenario or technology they are working on currently? That shows your interest in the company and this is a good way to judge a person how much a candidate is interested in the company.
+Interviewers are trained to not react to your answers so don’t expect yes or no answers from them if you are heading in the right direction or not. This sucks but is a very effective way of assessing a candidate so prepare yourself to see stone-cold faces.
+Amazon conducts a Bar Raiser round during the onsite interview and in this round, they make sure that you as a candidate raise the bar for certain competencies, which means that you should be better than 50% of the people that are currently at that level.
+Amazon’s interview questions/difficulty levels are less consistent vs. Google or Facebook.
+Now it’s time to discuss the strategy and rounds that Amazon conducts for the hiring procedure. But before that keep in mind a quick tip that works in every company…Your goal is to write just the right amount of good code and communicate well. You’re not paid to write code, you’re paid to think, figure out problems, and give the solution. To crack any technical interview all you just need is a laptop, a working internet connection will solve problems regularly, and within a few months, you can learn the essentials.
+</span>
+</div>
+<button type='button' id='divToggleButton'>Show More</button>
+<br><a href='/'>Home</a>
+</body>
+</html>

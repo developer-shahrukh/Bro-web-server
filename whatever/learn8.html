@@ -1,0 +1,29 @@
+<!DOCTYPE>
+<html lang='en'>
+<head>
+<title>JQuery Examples</title>
+<meta charset='utf-8'>
+<script src='jquery/jquery-3.7.1.min.js'></script>
+<script>
+function doIt()
+{
+alert($("[type]").html());
+alert($("[type='institute']").html());
+$("[type='institute']").hide();
+alert($("p[type]").html());
+alert($("div[entity!='city']").html());
+}
+</script>
+</head>
+<body>
+<h1>Example 8</h1>
+<div type="school">Doon School</div>
+<p type="institute">Thinking Machines</p>
+<div slogan="first">We Teach More Than We Promise To Teach</div>
+<span slogan="second">Think Big - Beyond 20 - 20 LPA</span>
+<div entity="city">Ujjain is the city of Gods</div>
+<div entity="country">Ujjain is in MP</div>
+<br><button type='button' onclick='doIt()'>Click Me</button>
+<br><a href='./'>Home</a>
+</body>
+</html>

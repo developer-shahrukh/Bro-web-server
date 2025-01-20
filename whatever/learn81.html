@@ -1,0 +1,95 @@
+<!DOCTYPE HTML>
+<html lang='en'>
+<head>
+<meta charset='utf-8'>
+<title>Validation Examples</title>
+<link rel="stylesheet" href="jquery-ui-1.13.2/jquery-ui.css">
+<script src="jquery/jquery-3.7.1.min.js"></script>
+<script src="jquery-ui-1.13.2/jquery-ui.js"></script>
+<style>
+    .error
+    {
+        color:red;
+    }
+</style>
+<script>
+function setInvalidMessage(component)
+{
+    if(component.id=='employeeId'){
+        alert('customeError : '+component.validity.customError);
+        alert('patternMismatch : '+component.validity.patternMismatch);
+        alert('rangeOverflow : '+component.validity.rangeOverflow);
+        alert('rangUnderflow : '+component.validity.rangeUnderflow);
+        alert('stepMismatch : '+component.validity.stepMismatch);
+        alert('typeMismatch : '+component.validity.typeMismatch);
+        alert('valid : '+component.validity.valid);
+        alert('valueMissing : '+component.validity.valueMissing);
+
+     if(component.validity.valueMismatch)
+     {
+        component.setCustomValidity("Employee Id is required");
+     }
+     if(component.validity.valueMissing)
+     {
+        component.setCustomValidity("Employee Id should be >=1");
+     }
+     if(component.validity.rangeOverflow)
+     {
+        component.setCustomValidity("Employee Id should be <=99999");
+     }
+     if(component.validity.rangeUnderflow)
+     {
+        component.setCustomValidity("Employee Id should be >=1");
+     }
+    }
+}
+</script>
+</head>
+<body>
+<h1>Example 81</h1>
+<h2>Form validation (Inbuilt Feature)</h2>
+
+<!-- Submitting form data with get type request is not a good idea-->
+<form method="get" action="addEmployee">
+    <label for="employeeId">EmployeeId</label>
+    <input type="number" 
+    id="employeeId" 
+    name="employeeId"
+    min="1"
+    max="99999"
+    step="1"
+    required
+    oninput='this.setCustomValidity("")'
+    onchange='this.setCustomValidity("")'
+    onvalid='this.setCustomValidity("")'
+    oninvalid='setInvalidMessage(this)'
+    ><br/>
+    <label for='firstname'>First name</label>
+    <input type="text" id="firstName" name="firstName"><br/>
+    <label for='lastname'>Last name</label>
+    <input type="text" id="lastName" name="lastName"><br/>
+    Gender
+    <label for='male'>Male</label>
+    <input type="radio" id="male" value="M" name="gender" checked>
+    &nbsp;&nbsp;&nbsp;
+    <label for='female'>Female</label> 
+    <input type="radio" id="female" value="F" name="gender"><br/>
+    <label for="dateOfBirth">Date of birth</label>
+    <input type="date" id="dateOfBirth" name="dateOfBirth" value="2021-01-25" required><br/>
+    <label for="isIndian">isIndian</label>
+    <input type="checkbox" id="isIndian" name="isIndian" value="Y" ><br/>
+    <label for="basicSalary">Basic salary</label>
+    <input 
+     type="number"
+     id="basicSalary"
+     name="basicSalary"
+     min=1
+     max=99999999
+     step=1
+     required>
+     <br/>
+<button type="submit">Add</button>
+</form>
+<br><a href='/'>Home</a>
+</body>
+</html>

@@ -1,0 +1,29 @@
+<!DOCTYPE HTML>
+<html lang='en'>
+<head>
+<meta charset='utf-8'>
+<title>JQuery Examples</title>
+<script src='jquery/jquery-3.7.1.min.js'></script>
+<script>
+$(()=>{
+$(document).keypress((ev)=>{
+var st=ev.target.selectionStart;
+var ed=ev.target.selectionEnd;
+alert(st+","+ed);
+});
+});
+
+const doSomething=()=>{
+var a="abcdefghijk";
+alert(a.slice(2,4));
+}
+</script>
+</head>
+<body>
+<h1>Example 28</h1>
+Enter your city<input type='text' id='ct'><br><br>
+<button type='button' onclick='doSomething()'>Click Me</button>
+
+<br><a href='/'>Home</a>
+</body>
+</html>

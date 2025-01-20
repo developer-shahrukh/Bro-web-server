@@ -1,0 +1,42 @@
+<!DOCTYPE>
+<html lang='en'>
+<head>
+<title>JQuery Examples</title>
+<meta charset='utf-8'>
+<script src='jquery/jquery-3.7.1.min.js'></script>
+<style>
+.xyz
+{
+cursor:pointer;
+background-color:black;
+color:white;
+}
+</style>
+<script>
+$(()=>{
+
+$("h3[menuitem]").hover(function(){
+$(this).toggleClass("xyz");
+});
+$("h3[menuitem]").click((ev)=>{
+alert($(ev.target).text()+" clicked");
+alert($(ev.target).attr("menuitem"));
+});
+
+});
+</script>
+</head>
+<body>
+<h1>Example 19</h1>
+<div>
+<h3 menuitem="0">Indore</h3>
+<h3 menuitem="1">Ujjain</h3>
+<h3 menuitem="2">Mumbai</h3>
+<h3 menuitem="3">Dewas</h3>
+<br><br><br>
+<h3>Delhi</h3>
+<br><br><br>
+</div>
+<br><a href='./'>Home</a>
+</body>
+</html>

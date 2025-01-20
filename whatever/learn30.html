@@ -1,0 +1,37 @@
+<!DOCTYPE HTML>
+<html lang='en'>
+<head>
+<meta charset='utf-8'>
+<title>JQuery Examples</title>
+<script src='jquery/jquery-3.7.1.min.js'></script>
+<script>
+const oneClicked=()=>{
+var a="10";
+alert(a+20);
+alert(parseInt(a)+20);
+a="good10";
+alert(parseInt(a)+20);
+a="10go1od";
+alert(parseInt(a)+23);
+a="103.2";
+alert(parseFloat(a)+20);
+}
+
+function twoClicked()
+{
+var a=10;
+var b=20;
+var c=a+b;
+alert("Total is : "+c);
+alert("Total is ${c}");
+alert(`Total is ${c}`);
+}
+</script>
+</head>
+<body>
+<h1>Example 30</h1>
+<button type='button' onClick='oneClicked()'>Button 1</button><br><br>
+<button type='button' onClick='twoClicked()'>Button 2</button><br><br>
+<br><a href='/'>Home</a>
+</body>
+</html>

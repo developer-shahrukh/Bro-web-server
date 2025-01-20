@@ -1,0 +1,38 @@
+<!DOCTYPE HTML>
+<html lang='en'>
+<head>
+<meta charset='utf-8'>
+<title>JQuery Examples</title>
+<link rel='stylesheet' href='jquery-ui-1.13.2/jquery-ui.min.css'>
+<script src='jquery-ui-1.13.2/jquery-ui.js'></script>
+<script src='jquery/jquery-3.7.1.min.js'></script>
+<script>
+    function getFirstNames(fnp)
+    {
+        var promise=new Promise(function(resolve){
+            fetch(`getFirstNames?firstNamePattern=${fnp}`).then((response)=>{
+                return response.json();
+            }).then((firstNames)=>{
+                resolve(firstNames);
+            });
+        });
+        return promise;
+    }
+
+    $(()=>{
+        $("#firstName").autocomplete({
+            source: function(data,giveBackThrough){
+                getFirstNames(data.term.toLowerCase()).then((firstNames)=>{
+                    giveBackThrough(firstNames);
+                });
+            }
+        });
+    });
+</script>
+</head>
+<body>
+<h1>Example 48</h1>
+First name <input type='text' id='firstName'><br><br>
+<br><a href='/'>Home</a>
+</body>
+</html>

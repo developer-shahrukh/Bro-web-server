@@ -1,0 +1,62 @@
+<!DOCTYPE HTML>
+<html lang='en'>
+<head>
+<meta charset='utf-8'>
+<title>JQuery Examples</title>
+<script src='jquery/jquery-3.7.1.min.js'></script>
+<style>
+.xyz
+{
+height:40px;
+overflow:hidden;
+}
+</style>
+<script>
+$(()=>{
+var ih=$(".xyz").css("height");
+
+$("#abcd").click((ev)=>{
+ev.preventDefault();
+
+if($(".xyz").css("height")==ih)
+{
+$(".xyz").css("height","auto");
+$(ev.target).html("Show Less");
+}
+else
+{
+$(".xyz").css("height",ih);
+$(ev.target).html("Show More");
+}
+});
+});
+</script>
+</head>
+<body>
+<h1>Example 32</h1>
+<div class='xyz'>
+Ujjain is the cool city<br>
+Ujjain to indore 55km away<br>
+Indore is a clean city<br>
+Ujjain is the cool city<br>
+Ujjain to indore 55km away<br>
+Indore is a clean city<br>
+Ujjain is the cool city<br>
+Ujjain to indore 55km away<br>
+Indore is a clean city<br>
+Ujjain is the cool city<br>
+Ujjain to indore 55km away<br>
+Indore is a clean city<br>
+Ujjain is the cool city<br>
+Ujjain to indore 55km away<br>
+Indore is a clean city<br>
+Ujjain is the cool city<br>
+Ujjain to indore 55km away<br>
+Indore is a clean city<br>
+Bhopal is the capital of Madhya Pradesh<br>
+</div>
+<a id='abcd' href=''>Show more</a><br>
+<br>
+<br><a href='/'>Home</a>
+</body>
+</html>

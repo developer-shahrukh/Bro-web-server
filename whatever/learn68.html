@@ -1,0 +1,118 @@
+<!DOCTYPE HTML>
+<html lang='en'>
+<head>
+<meta charset='utf-8'>
+<title>JQuery Examples</title>
+<link rel='stylesheet' href='jquery-ui-1.13.2/jquery-ui.min.css'>
+<script src='jquery/jquery-3.7.1.min.js'></script>
+<script src='jquery-ui-1.13.2/jquery-ui.js'></script>
+<script>
+function updateNoticeBoard()
+{
+    var red=$(".redSlider").slider("value");
+    var green=$(".greenSlider").slider("value");
+    var blue=$(".blueSlider").slider("value");
+
+    var redHex=red.toString(16);
+    var greenHex=green.toString(16);
+    var blueHex=blue.toString(16);
+
+    var colorCode="#"+redHex+greenHex+blueHex;
+
+    var message=`Selected Color : RGB(${red},${green},${blue}) &nbsp;&nbsp;&nbsp; Hex Color COde : ${colorCode}`;
+
+    $(".noticeBoard").html(message);
+    $(".rightPanel").css("background-color",colorCode);
+}
+$(()=>{
+    $(".redSlider,.greenSlider,.blueSlider").slider({
+        min: 0,
+        max: 255,
+        value: 50,
+        slide: updateNoticeBoard,
+        change: updateNoticeBoard
+    });
+    /*
+    $(".greenSlider").slider({
+        min: 0,
+        max: 255,
+        value: 0,
+        slider: updateNoticeBoard,
+        change: updateNoticeBoard
+    });
+
+    $(".blueSlider").slider({
+        min: 0,
+        max: 255,
+        value: 0,
+        slider: updateNoticeBoard,
+        change: updateNoticeBoard
+    });*/
+    updateNoticeBoard();
+});
+</script>
+<style>
+    .colorPicker
+    {
+        border: 1px solid orange;
+        display: flex;
+        width: 90%;
+        padding: 25px;
+    }
+    .redSlider
+    {
+        margin: 20px;
+        background-color: red;
+    }
+    .greenSlider
+    {
+        margin: 20px;
+        background-color: green;
+    }
+    .blueSlider
+    {
+        margin: 20px;
+        background-color: blue;
+    }
+    .leftPanel
+    {
+        width: 75%;
+    }
+    .rightPanel
+    {
+        width: 20%;
+        border: 2px solid gray;
+        padding: 20px;
+        border-radius: 20px;
+    }
+    .noticeBoard
+    {
+        width: 90%;
+        border: 1px solid black;
+        margin-top: 10px;
+        padding : 25px;
+        font-size: 20pt;
+        color: red;
+    }
+</style>
+</head>
+<body>
+<h1>Example 68</h1>
+<h3>Color Picker</h3>
+<div class='sss'>
+<div class='leftPanel'>
+    <div class='redSlider'></div>
+    <div class='greenSlider'></div>
+    <div class='blueSlider'></div>
+</div>
+
+<div class='rightPanel'>
+</div>
+</div>
+<br><br>
+<div class='noticeBoard'>
+Cool
+</div>
+<br><a href='/'>Home</a>
+</body>
+</html>

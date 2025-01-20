@@ -1,0 +1,40 @@
+<!DOCTYPE HTML>
+<html lang='en'>
+<head>
+<meta charset='utf-8'>
+<title>JQuery Examples</title>
+<script>
+const doSomething=()=>{
+    var x=2;
+    try{
+        if(x<50) throw Error(`Unable to process number ${x} less than 50`);
+        if(x>500) throw "Number 500 cannot be processed";
+        if(x%2==0) throw x;
+        alert(x*x);
+    }catch(e)
+    {
+        // alert(typeof(e));
+        if(e instanceof Error)
+        {
+            alert('Cannot process '+x+' as it is less than 50');
+        }else{
+            if(typeof(e)=="number")
+            {
+             alert("Number "+x+" cannot be processed as it is even number"); 
+            }else{
+                if(typeof(e)=="string")
+                {
+                    alert("Number "+x+" cannot be processed as it is greater than 500");
+                }
+            }
+        }
+    }
+}
+</script>
+</head>
+<body>
+<h1>Example 59</h1>
+<button type="button" onclick="doSomething()">Click me</button>
+<br><a href='/'>Home</a>
+</body>
+</html>

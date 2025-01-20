@@ -1,0 +1,125 @@
+<!DOCTYPE HTML>
+<html lang='en'>
+<head>
+<meta charset='utf-8'>
+<title>JQuery Examples</title>
+<link rel='stylesheet' href='jquery-ui-1.13.2/jquery-ui.min.css'>
+<script src='jquery/jquery-3.7.1.min.js'></script>
+<script src='jquery-ui-1.13.2/jquery-ui.js'></script>
+<style>
+    .container
+    {
+        width:600px;
+        height:250px;
+        border:1px solid red;
+        display:flex;
+        padding:10px;
+    }
+    .leftList
+    {
+        border:1px solid black;
+        width:200px;
+        height:200px;
+    }
+    .rightList
+    {
+        border:1px solid black;
+        width:200px;
+        height:200px;
+    }
+    .list 
+    {
+        list-style: none;
+        cursor:pointer;
+    }
+    
+    .ui-selected
+    {
+        color:white;
+        background-color:orange;
+    }
+    #rightButton
+    {
+        width:20px;
+        height:20px;
+        margin:5px;
+        margin-top:80px;
+    }
+    #leftButton
+    {
+        width:20px;
+        height:20px;
+        margin:5px;
+        margin-top:80px;
+    }
+</style>
+<script>
+$(()=>{
+    var sel=$("#select");
+      sel.selectable({
+      selected : function(ev,ui){
+        var selectedItem=$('ui.selected');
+        var itemName=selectedItem.text();
+        var itemCode=selectedItem.data('code');
+        //alert(itemCode+","+itemName);
+        $(ui.selected).addClass("ui-selected").siblings().removeClass("ui-selected");
+      }
+    });
+    var right=$("#unitOfMeasurements");
+    right.selectable({
+      selected : function(ev,ui) {
+        $(ui.selected).addClass("ui-selected").siblings().removeClass("ui-selected");
+        //alert(ev.target.id);
+      }
+    });
+
+
+    $("#rightButton").click(function(){
+          var selectedData=$("#select .ui-selected");
+          if(selectedData.length > 0) {
+            selectedData.each(function(){
+              $("#unitOfMeasurements").append($(this).clone());
+              $(this).remove();
+            });
+          }
+        });
+        $("#leftButton").click(function(){
+          var rightData=$("#unitOfMeasurements .ui-selected");
+          if(rightData.length > 0) {
+            rightData.each(function(){
+              $("#select").append($(this).clone());
+              //$(ui.selected).addClass("ui-selected").siblings().removeClass("ui-selected");
+              $(this).remove();
+            });
+          }
+        });
+});
+
+
+  
+</script>
+
+</head>
+<body>
+<h1>Example List</h1>
+<div class="container">
+    <div class="leftList">
+        <ul class="list" id="select" aria-multiselectable="true">
+            <li code="1">Item1</li>
+            <li code="2">Item2</li>
+            <li code="3">Item3</li>
+            <li code="4">Item4</li>
+            <li code="5">Item5</li>
+        </ul>
+        </div>
+     <button type="button" id="rightButton">&gt;</button>&nbsp;&nbsp;
+    <button type="button" id="leftButton">&lt;</button>
+    <div class="rightList">
+        <ul class="list" id="unitOfMeasurements">
+
+        </ul>
+    </div>
+</div>
+
+</body>
+</html>

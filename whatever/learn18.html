@@ -1,0 +1,31 @@
+<!DOCTYPE>
+<html lang='en'>
+<head>
+<title>JQuery Examples</title>
+<meta charset='utf-8'>
+<script src='jquery/jquery-3.7.1.min.js'></script>
+<style>
+.xyz
+{
+display:none;
+}
+</style>
+<script>
+$(()=>{
+$("#features").click(()=>{
+$("#something").toggleClass("xyz");
+});
+});
+</script>
+</head>
+<body>
+<h1>Example 18</h1>
+<div id='something'>
+<h1>Thinking machines</h1>
+<span>Think Big</span>
+<h3>Ujjain is the cool city</h3>
+</div>
+Hide <input type='checkbox' id='features'><br>
+<br><a href='./'>Home</a>
+</body>
+</html>
