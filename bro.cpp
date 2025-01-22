@@ -12,7 +12,70 @@
 #include<sys/socket.h>
 #endif
 using namespace std;
-// Amit [The Bro Programmer]
+// Amit [The Bro Programmer] 
+class BroUtility
+{
+private:
+BroUtility(){}
+public:
+static void loadMIMETypes(map<string,string> &mimeTypesMap)
+{
+FILE *file;
+file=fopen("bro-data/mime.types","r");
+if(file==NULL) return;
+char *mimeType;
+char *extension;
+char line[200];
+int x;
+while(true)
+{
+fgets(line,200,file);
+if(feof(file)) break;
+if(line[0]=='#') continue;
+// logic to remove \r \n from the end of the string start here
+x=strlen(line)-1;
+while(true)
+{
+if(line[x]=='\r' || line[x]=='\n')
+{
+line[x]='\0';
+x--;
+}
+else
+{
+break;
+}
+}
+// logic to remove \r \n from the end of the string ends here
+mimeType=&line[0];
+for(x=0;line[x]!='\t';x++);
+line[x]='\0';
+x++;
+while(line[x]=='\t') x++;
+while(true)
+{
+extension=&line[x];
+while(line[x]!='\0' && line[x]!=' ') x++;
+if(line[x]=='\0')
+{
+// add entry to map and break the loop
+mimeTypesMap.insert(pair<string,string>(string(extension),string(mimeType)));
+cout<<extension<<"  ,  "<<mimeType<<endl;
+break;
+}
+else
+{
+// place \0 on xth index, add entry to map and increment the value of x
+line[x]='\0';
+mimeTypesMap.insert(pair<string,string>(string(extension),string(mimeType)));
+cout<<extension<<"  ,  "<<mimeType<<endl;
+x++;
+}
+} // parsing extension ends here
+}
+fclose(file);
+}
+};
 class FileSystemUtility
 {
 private:
@@ -200,10 +263,12 @@ class Bro
 private:
 string staticResourcesFolder;
 map<string,URLMapping> urlMappings;
+map<string,string> mimeTypes;
 public:
 Bro()
 {
-// Not yet decided
+BroUtility::loadMIMETypes(mimeTypes);
+if(mimeTypes.size()==0) throw string("bro-data folder has be tampered with");
 }
 ~Bro()
 {
