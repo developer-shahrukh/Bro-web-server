@@ -99,6 +99,14 @@ if(x!=0) return false;
 if(s.st_mode & S_IFDIR) return true;
 return false;
 }
+static string getFileExtension(const char *path)
+{
+int x;
+x=strlen(path)-1;
+while(x>=0 && path[x]!='.') x--;
+if(x==-1 || path[x]!='.') return string("");
+return string(path+(x+1));
+}
 };
 class StringUtility
 {
@@ -304,9 +312,27 @@ fclose(file);
 return false; 
 }
 rewind(file); // to move the internal file pointer to the start of the file
-
+string extension,mimeType;
+extension=FileSystemUtility::getFileExtension(resourcePath.c_str());
+if(extension.length()>0)
+{
+auto mimeTypesIterator=mimeTypes.find(extension);
+if(mimeTypesIterator!=mimeTypes.end())
+{
+mimeType=mimeTypesIterator->second;
+}
+else
+{
+mimeType=string("text/html");
+}
+}  
+else
+{
+mimeType=string("text/html");
+}
+cout<<resourcePath<<" , "<<extension<<" , "<<mimeType<<endl;
 char header[200];
-sprintf(header,"HTTP/1.1 200 Ok\r\nContent-Type: text/html\r\nContent-Length: %ld\r\nConnection: close\r\n\r\n",fileSize);
+sprintf(header,"HTTP/1.1 200 Ok\r\nContent-Type: %s\r\nContent-Length: %ld\r\nConnection: close\r\n\r\n",mimeType,fileSize);
 send(clientSocketDescriptor,header,strlen(header),0);
 int bytesLeftToRead;
 int bytesToRead;
@@ -331,6 +357,15 @@ if(Validator::isValidURLFormate(url))
 urlMappings.insert(pair<string,URLMapping>(url,{__GET__,callBack}));
 }
 }
+
+void post(string url,void (*callBack)(Request &,Response &))
+{
+if(Validator::isValidURLFormate(url))
+{
+urlMappings.insert(pair<string,URLMapping>(url,{__POST__,callBack}));
+}
+}
+
 void listen(int portNumber,void (*callBack)(Error &))
 {
 #ifdef _WIN32
@@ -517,18 +552,22 @@ try
 {
 Bro bro;
 bro.setStaticResourcesFolder("whatever");
-bro.get("/",[](Request &request,Response &response) {
+
+
+bro.get("/save_test1_data",[](Request &request,Response &response) {
 const char *html=R""""(
 <!DOCTYPE HTML>
 <html lan='en'>
 <head>
 <meta charset='utf-8'>
-<title>Administrator</title>
+<title>Bro Test Cases</title>
 </head>
 <body>
-<h1>Welcome</h1>
-<h3>Some text</h3>
-<a href='getCustomers'>Customers list<a>
+<h1>Test Case 1 - GET with Query String</h1>
+<h3>Response From Server Side</h3>
+<b>Data Saved</b>
+<br/><br/>
+<a href='/index.html' >Home</a>
 </body>
 </html>
 )"""";
@@ -536,29 +575,28 @@ response.setContentType("text/html"); // Setting MIME Type
 response<<html;
 });
 
-bro.get("/getCustomers",[](Request &request,Response &response) {
+
+bro.post("/save_test2_data",[](Request &request,Response &response) {
 const char *html=R""""(
 <!DOCTYPE HTML>
 <html lan='en'>
 <head>
 <meta charset='utf-8'>
-<title>Whatever</title>
+<title>Bro Test Cases</title>
 </head>
 <body>
-<h1>List of Customers</h1>
-<ul>
-<li>Ramesh</li>
-<li>Suresh</li>
-<li>Mohan</li>
-</ul>
-<br>
-<a href='/' >Home</a>
+<h1>Test Case 2 - POST with form data</h1>
+<h3>Response From Server Side</h3>
+<b>Data Saved</b>
+<br/><br/>
+<a href='/index.html' >Home</a>
 </body>
 </html>
 )"""";
 response.setContentType("text/html"); // Setting MIME Type
 response<<html;
 });
+
 
 bro.listen(6060,[](Error & error) {
 if(error.hasError())
