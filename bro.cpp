@@ -316,6 +316,7 @@ string extension,mimeType;
 extension=FileSystemUtility::getFileExtension(resourcePath.c_str());
 if(extension.length()>0)
 {
+transform(extension.begin(),extension.end(),extension.begin(),::tolower);
 auto mimeTypesIterator=mimeTypes.find(extension);
 if(mimeTypesIterator!=mimeTypes.end())
 {
