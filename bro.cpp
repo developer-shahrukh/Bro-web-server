@@ -1,3 +1,4 @@
+#include<bits/stdc++.h>
 #include<sys/stat.h>
 #include<iostream>
 #include<map>
@@ -192,14 +193,59 @@ return this->error;
 class Request
 {
 private:
+map<string,string> dataMap;
 char *method;
 char *requestURI;
 char *httpVersion;
-Request(char *method,char *requestURI,char *httpVersion)
+Request(char *method,char *requestURI,char *httpVersion,char *dataInRequest)
 {
 this->method=method;
 this->requestURI=requestURI;
 this->httpVersion=httpVersion;
+if(dataInRequest!=NULL && strcmp(this->method,"get")==0)
+{
+createDataMap(dataInRequest,dataMap);
+}
+}
+
+void createDataMap(char *str,map<string,string> &dataMap)
+{
+char *ptr1,*ptr2;
+ptr1=str;
+ptr2=str;
+while(1)
+{
+if(*ptr2!='\0' && *ptr2!='=') ptr2++;
+if(*ptr2=='\0') return;
+*ptr2='\0';
+string key=string(ptr1);
+ptr1=ptr2+1;
+ptr2=ptr1;
+while(*ptr2!='\0' && *ptr2!='&') ptr2++;
+if(*ptr2=='\0')
+{
+dataMap.insert(pair<string,string>(key,string(ptr1)));
+break;
+}
+else
+{
+*ptr2='\0';
+dataMap.insert(pair<string,string>(key,string(ptr1)));
+ptr1=ptr2+1;
+ptr2=ptr1;
+}
+} // infinite loop ends here 
+}
+
+public:
+string operator[](string key)
+{
+auto iterator=dataMap.find(key);
+if(iterator==dataMap.end())
+{
+return string("");
+}
+return iterator->second;
 }
 friend class Bro;
 };
@@ -437,7 +483,7 @@ close(clientSocketDescriptor);
 continue;
 }
 int i;
-char *method,*requestURI,*httpVersion;
+char *method,*requestURI,*httpVersion,*dataInRequest;
 requestBuffer[requestLength]='\0';
 // code to parse the first line of the http request starts here
 // first line should be REQUEST_METHOD SPACE URI SPACE HTTPVersionCRLF
@@ -513,6 +559,14 @@ HttpErrorStatusUtility::sendHttpVersionNotSupportedError(clientSocketDescriptor,
 close(clientSocketDescriptor);
 continue;
 }
+dataInRequest=NULL;
+i=0;
+while(requestURI[i]!='\0' && requestURI[i]!='?') i++;
+if(requestURI[i]=='?')
+{
+requestURI[i]='\0';
+dataInRequest=requestURI+i+1;
+}
 cout<<"Request arrived, uri is : "<<requestURI<<endl;
 auto  urlMappingsIterator=urlMappings.find(requestURI);
 if(urlMappingsIterator==urlMappings.end())
@@ -533,7 +587,7 @@ continue;
 }
 // code to parse the header and then the payload if exists start here
 // code to parse the header and then the payload if exists ends here
-Request request(method,requestURI,httpVersion);
+Request request(method,requestURI,httpVersion,dataInRequest);
 Response response;
 urlMapping.mappedFunction(request,response);
 HttpResponseUtility::sendResponse(clientSocketDescriptor,response);
@@ -556,6 +610,12 @@ bro.setStaticResourcesFolder("whatever");
 
 
 bro.get("/save_test1_data",[](Request &request,Response &response) {
+string nnn=request["nm"];
+string ccc=request["ct"];
+cout<<"Data that arrived in request"<<endl;
+cout<<"("<<nnn<<")"<<endl;
+cout<<"("<<ccc<<")"<<endl;
+cout<<"---------------------"<<endl;
 const char *html=R""""(
 <!DOCTYPE HTML>
 <html lan='en'>
