@@ -215,7 +215,7 @@ ptr1=str;
 ptr2=str;
 while(1)
 {
-if(*ptr2!='\0' && *ptr2!='=') ptr2++;
+while(*ptr2!='\0' && *ptr2!='=') ptr2++;
 if(*ptr2=='\0') return;
 *ptr2='\0';
 string key=string(ptr1);
