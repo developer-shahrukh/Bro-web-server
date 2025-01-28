@@ -61,7 +61,7 @@ if(line[x]=='\0')
 {
 // add entry to map and break the loop
 mimeTypesMap.insert(pair<string,string>(string(extension),string(mimeType)));
-cout<<extension<<"  ,  "<<mimeType<<endl;
+//cout<<extension<<"  ,  "<<mimeType<<endl;
 break;
 }
 else
@@ -69,7 +69,7 @@ else
 // place \0 on xth index, add entry to map and increment the value of x
 line[x]='\0';
 mimeTypesMap.insert(pair<string,string>(string(extension),string(mimeType)));
-cout<<extension<<"  ,  "<<mimeType<<endl;
+//cout<<extension<<"  ,  "<<mimeType<<endl;
 x++;
 }
 } // parsing extension ends here
@@ -345,7 +345,7 @@ bool serveStaticResource(int clientSocketDescriptor,const char *requestURI)
 if(this->staticResourcesFolder.length()==0) return false;   
 if(!FileSystemUtility::directoryExists(this->staticResourcesFolder.c_str())) return false;
 string resourcePath=this->staticResourcesFolder+string(requestURI);
-cout<<"Static resource path is "<<resourcePath<<endl;
+//cout<<"Static resource path is "<<resourcePath<<endl;
 if(!FileSystemUtility::fileExists(resourcePath.c_str())) return false;
 FILE *file=fopen(resourcePath.c_str(),"rb");
 if(file==NULL) return false;
@@ -377,9 +377,9 @@ else
 {
 mimeType=string("text/html");
 }
-cout<<resourcePath<<" , "<<extension<<" , "<<mimeType<<endl;
+//cout<<resourcePath<<" , "<<extension<<" , "<<mimeType<<endl;
 char header[200];
-sprintf(header,"HTTP/1.1 200 Ok\r\nContent-Type: %s\r\nContent-Length: %ld\r\nConnection: close\r\n\r\n",mimeType,fileSize);
+sprintf(header,"HTTP/1.1 200 Ok\r\nContent-Type: %s\r\nContent-Length: %ld\r\nConnection: close\r\n\r\n",mimeType.c_str(),fileSize);
 send(clientSocketDescriptor,header,strlen(header),0);
 int bytesLeftToRead;
 int bytesToRead;
@@ -567,7 +567,7 @@ if(requestURI[i]=='?')
 requestURI[i]='\0';
 dataInRequest=requestURI+i+1;
 }
-cout<<"Request arrived, uri is : "<<requestURI<<endl;
+//cout<<"Request arrived, uri is : "<<requestURI<<endl;
 auto  urlMappingsIterator=urlMappings.find(requestURI);
 if(urlMappingsIterator==urlMappings.end())
 {
