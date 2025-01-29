@@ -1,8 +1,8 @@
 # Ignore a specific folder
-node_modules/
-bro-data/
-learn/
-whatever/
+/node_modules
+/bro-data
+/learn
+/whatever
 # Ignore all `.log` files
 *.log
 
