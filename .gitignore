@@ -5,7 +5,7 @@
 /whatever
 # Ignore all `.log` files
 *.log
-
+.bro.cpp.swp
 # Ignore all `.env` files
 .env
 
