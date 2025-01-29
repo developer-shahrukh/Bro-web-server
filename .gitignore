@@ -1,4 +1,16 @@
-/whatever\fontawesome-6.5.2
-/whatever\jquery
-/whatever\jquery-ui-1.13.2
-/whatever\jquery-validation-1.19.5
+# Ignore a specific folder
+node_modules/
+bro-data/
+learn/
+whatever/
+# Ignore all `.log` files
+*.log
+
+# Ignore all `.env` files
+.env
+
+# Ignore a folder and its contents
+dist/
+
+# Ignore all `.cache` folders anywhere in the project
+**/.cache/
