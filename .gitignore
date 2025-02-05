@@ -3,6 +3,7 @@
 /bro-data
 /learn
 /whatever
+/netstat
 # Ignore all `.log` files
 *.log
 .bro.cpp.swp
