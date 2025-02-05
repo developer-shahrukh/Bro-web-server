@@ -106,7 +106,7 @@ if(line[x]=='\0')
 {
 // add entry to map and break the loop
 mimeTypesMap.insert(pair<string,string>(string(extension),string(mimeType)));
-//cout<<extension<<"  ,  "<<mimeType<<endl;
+cout<<extension<<"  ,  "<<mimeType<<endl;
 break;
 }
 else
